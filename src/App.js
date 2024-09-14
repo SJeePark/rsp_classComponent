@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './App.css';
 import Box from './component/Box';
 
@@ -27,16 +28,60 @@ const choice = {
 
 
 function App() {
+  const [userSelect, setUserSelect] = useState(null);
+  const [computerSelect, setComputerSelect] = useState(null);
+  const [result, setResult] = useState({user:"", computer:""});
 
   const play = (userChoice)=>{
-    console.log('선택', userChoice)
+    setUserSelect(choice[userChoice]);
+    let computerChoice = randomChoice()
+    setComputerSelect(computerChoice);
+    setResult(judgement(choice[userChoice], computerChoice));
   }
+
+  const randomChoice=()=>{
+    let itemArray = Object.keys(choice) //Object.keys: 객체의 키값만 뽑아 배열로 만들어주는 함수
+    console.log("item", itemArray); 
+    let randomItem = Math.floor(Math.random()*itemArray.length) //객체의 지정된 인덱스 번호를 랜덤하게 출력
+    console.log("random", randomItem);
+    let final = itemArray[randomItem];
+    return choice[final];
+  }
+
+  const judgement = (user, computer) =>{
+    //user == computer tie
+    //user == rock, computer == scissors Win
+    //user == rock, com == paper Lose
+    //user == scissor com==paper Win
+    //user Scissor com == rock Lose
+    //user == paper com == rock Win
+    //user == paper com == scissor Lose
+
+    if (user.title === computer.title) {
+      return { user: "tie", computer: "tie" };
+    } else if (user.title === "Rock") {
+      return computer.title === "Scissor" 
+        ? { user: "Win", computer: "Lose" } 
+        : { user: "Lose", computer: "Win" };
+    } else if (user.title === "Scissor") {
+      return computer.title === "Paper" 
+        ? { user: "Win", computer: "Lose" } 
+        : { user: "Lose", computer: "Win" };
+    } else if (user.title === "Paper") {
+      return computer.title === "Rock" 
+        ? { user: "Win", computer: "Lose" } 
+        : { user: "Lose", computer: "Win" };
+    }
+  }
+
+  const changeBorder = (result) => result === "Win" ? "green" : result === "Lose" ? "red" : "gray";
+
 
   return (
     <div>
       <div className='container'>
-        <Box name = 'User'></Box>
-        <Box name = 'Computer'></Box>
+        <Box name = 'User' item={userSelect} result={result.user} borderColor={changeBorder(result.user)}></Box>
+        <Box name = 'Computer' item={computerSelect} result={result.computer} borderColor={changeBorder(result.computer)}></Box>
       </div>
       <div className='container'>
         <button onClick={() => play("scissor")}>가위</button>

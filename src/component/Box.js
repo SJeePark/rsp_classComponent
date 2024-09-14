@@ -1,11 +1,12 @@
-import React from 'react'
+import React from 'react';
 
 const Box = (props) => {
+  console.log('p', props);
   return (
-    <div className='box'>
+    <div className='box' style={{ borderColor: props.borderColor }}>
       <h2>{props.name}</h2>
-      <img src='https://cdn.pixabay.com/photo/2016/03/31/19/28/cut-1295044_1280.png' width={'200px'}></img>
-      <p>result</p>
+      <img src={props.item && props.item.img} width={'200px'}></img>
+      <p>{props.result}</p>
     </div>
   )
 }
